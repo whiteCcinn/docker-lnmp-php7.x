@@ -1,0 +1,44 @@
+version: "2"
+services:
+    nginx:
+        image: ccinn/nginx:latest
+        container_name: nginx
+        privileged: true
+        build: ./nginx
+        ports:
+            - "80:80"
+        volumes:
+            - ./www:/home/wwwroot
+            - ./nginx/conf.d:/etc/nginx/conf.d
+        networks:  
+            - code-network
+    
+    php:
+        image: ccinn/php:latest
+        container_name: php
+        privileged: true
+        build: ./php
+        ports:
+            - "9000:9000"
+        volumes:
+            - ./www:/home/wwwroot
+        networks:  
+            - code-network
+    
+    mysql:
+        image: ccinn/mysql:latest
+        container_name: mysql 
+        privileged: true
+        build: ./mysql
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./mysql/data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 123456
+        networks:  
+            - code-network
+
+networks:  
+    code-network:  
+        driver: bridge 
